@@ -7,16 +7,16 @@ import styles from './Header.css';
 
 export function Header(props, context) {
   const languageNodes = props.intl.enabledLanguages.map(
-    lang => <li key={lang} onClick={() => props.switchLanguage(lang)} className={lang === props.intl.locale ? styles.selected : ''}>{lang}</li>
+    lang => <div key={lang} onClick={() => props.switchLanguage(lang)} className={lang === props.intl.locale ? styles.selected : ''}>{lang}</div>
   );
 
   return (
     <div className={styles.header}>
       <div className={styles['language-switcher']}>
-        <ul>
-          <li><FormattedMessage id="switchLanguage" /></li>
+        <div className={styles['language-switcher-container']}>
+          <div><FormattedMessage id="switchLanguage" /></div>
           {languageNodes}
-        </ul>
+        </div>
       </div>
       <div className={styles.content}>
         <h1 className={styles['site-title']}>

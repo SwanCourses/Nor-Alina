@@ -1,6 +1,19 @@
 .container {
-  max-width: 980px;
+  max-width: 1140px;
   width: 100%;
-  padding: 15px;
+  padding: 5px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: row
 }
+.side-item {
+  margin: 5px;
+  flex-shrink:2;
+  flex-grow:2;
+}
+.center-item {
+  margin: 5px;
+  flex-shrink:1;
+  flex-grow:1;
+}
+
