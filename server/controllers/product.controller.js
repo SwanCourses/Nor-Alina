@@ -31,12 +31,10 @@ export function addProduct(req, res) {
     newProduct.name = sanitizeHtml(newProduct.name);
     newProduct.description = sanitizeHtml(newProduct.description);
 
-    let colorArray = newProduct.colors;
-    newProduct.colors = [];
-
-    for(let i = 0; i < colorArray.length; i++)
+    newProduct.colors = JSON.parse(newProduct.colors);
+    for(let key in newProduct.colors)
     {
-      newProduct.colors.push(sanitizeHtml(colorArray[i]));
+      newProduct.colors[key] = sanitizeHtml(newProduct.colors[key]);
     }
 
     newProduct.cuid = cuid();

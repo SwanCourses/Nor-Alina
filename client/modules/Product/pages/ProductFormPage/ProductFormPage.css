@@ -47,5 +47,13 @@ textarea {
 }
 
 .colors{
+  padding: 5px 0;
+}
 
+.size{
+  margin: 5px 0;
+}
+
+input[type='file']{
+  margin: 10px 0;
 }
