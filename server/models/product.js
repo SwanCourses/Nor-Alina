@@ -10,8 +10,9 @@ const productSchema = new Schema({
   description: {type: 'String', required: true},
   cuid: {type: 'String', required: true},
   price: {type: 'Number', required: true},
-  size: {type: 'String', required: true},
+  sizes: [],
   colors: {type: 'Object', required: false},
+  groups: [],
   photos: []
 });
 

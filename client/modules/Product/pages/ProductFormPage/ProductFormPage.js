@@ -2,6 +2,7 @@
  * Created by alina on 25.09.16.
  */
 import React, { Component } from 'react';
+import Select from 'react-select';
 
 import { injectIntl, intlShape, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
@@ -10,7 +11,20 @@ import { addProductRequest } from '../../ProductActions';
 
 import styles from './ProductFormPage.css';
 
-const sizes = ['XS','S','M','L','XL'];
+const sizes = [
+  { value: 'XS', label: 'XS' },
+  { value: 'S', label: 'S' },
+  { value: 'M', label: 'M' },
+  { value: 'L', label: 'L' },
+  { value: 'XL', label: 'XL' }
+];
+
+const groups = [
+  { value: 'male', label: 'male' },
+  { value: 'female', label: 'female' },
+  { value: 'child', label: 'child' },
+  { value: 'other', label: 'other' }
+];
 
 class ProductFormPage extends Component {
 
@@ -22,6 +36,23 @@ class ProductFormPage extends Component {
   onChange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
   };
+
+  onSizeChange = (val) => {
+    let sizeArr = [];
+    for(let i=0; i< val.length; i++) {
+      sizeArr.push(val[i].value);
+    }
+    this.setState({ sizes: sizeArr });
+  };
+
+  onGroupChange = (val) => {
+    let groupArr = [];
+    for(let i=0; i< val.length; i++) {
+      groupArr.push(val[i].value);
+    }
+    this.setState({ groups: groupArr });
+  };
+
 
   onAddColor = () => {
     let obj = this.state.colors;
@@ -52,8 +83,15 @@ class ProductFormPage extends Component {
     form.append('product[code]', this.state.code);
     form.append('product[price]', this.state.price);
     form.append('product[description]', this.state.description);
-    form.append('product[size]', this.state.size);
     form.append('product[colors]', JSON.stringify(this.state.colors));
+
+    for(let i = 0; i < this.state.sizes.length; i++) {
+      form.append('product[sizes]', this.state.sizes[i]);
+    }
+
+    for(let i = 0; i < this.state.groups.length; i++) {
+      form.append('product[groups]', this.state.groups[i]);
+    }
 
     for(let i = 0; i < this.refs.photos.files.length; i++) {
       form.append('product[photos]', this.refs.photos.files[i], this.refs.photos.files[i].name)
@@ -95,18 +133,21 @@ class ProductFormPage extends Component {
                 onChange={this.onChange}
                 className={styles['form-field']}
                 name="description"/>
-              <select
-                name="size"
+              <Select
+                placeholder="Product sizes"
+                multi={true}
+                name="sizeField"
                 className={styles.size}
-                value={this.state.size}
-                onChange={this.onChange}>
-                <option disabled>{this.props.intl.messages.productSize}</option>
-                {
-                  sizes.map(function(size) {
-                    return <option key={"product_size_" + size} value={size}>{size}</option>;
-                  })
-                }
-              </select>
+                value={this.state.sizes}
+                options={sizes}
+                onChange={this.onSizeChange} />
+              <Select
+                placeholder="Product groups"
+                multi={true}
+                name="groupField"
+                value={this.state.groups}
+                options={groups}
+                onChange={this.onGroupChange} />
               <ProductColorControl colors={this.state.colors} onColorChange={this.onColorChange} onRemoveColor={this.onRemoveColor} onAddColor={this.onAddColor} />
             <div className={styles.photos}>
                   <input
