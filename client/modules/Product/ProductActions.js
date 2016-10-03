@@ -3,6 +3,7 @@
  */
 import callApi, {callApiForm} from '../../util/apiCaller';
 
+import { browserHistory } from 'react-router';
 export const ADD_PRODUCT = 'ADD_PRODUCT';
 export const ADD_PRODUCTS = 'ADD_PRODUCTS';
 export const SET_SEARCH_QUERY = 'SET_SEARCH_QUERY';
@@ -16,18 +17,18 @@ export function addProduct(product) {
 }
 
 export function addProducts(products) {
-    return {
-        type: ADD_PRODUCTS,
-        products,
-      };
-  }
+  return {
+    type: ADD_PRODUCTS,
+    products,
+  };
+}
 
 export function setSearchQuery(searchQuery) {
-    return {
-        type: SET_SEARCH_QUERY,
-        searchQuery,
-      };
-  }
+  return {
+    type: SET_SEARCH_QUERY,
+    searchQuery,
+  };
+}
 
 export function filterByGroup(groupsFilter) {
   return {
@@ -38,14 +39,17 @@ export function filterByGroup(groupsFilter) {
 
 export function addProductRequest(form) {
   return (dispatch) => {
-    return callApiForm('products', 'post', form).then(res => dispatch(addProduct(res.product)))
-  };
+    return callApiForm('products', 'post', form).then(res => {
+      dispatch(addProduct(res.product));
+      browserHistory.push('/products/' + res.product.cuid)
+    });
+  }
 }
 
 export function fetchProducts() {
-    return (dispatch) => {
-        return callApi('products').then(res => {
-            dispatch(addProducts(res.products));
-          });
-      };
-  }
+  return (dispatch) => {
+    return callApi('products').then(res => {
+      dispatch(addProducts(res.products));
+    });
+  };
+}
