@@ -18,9 +18,9 @@ export function getProducts(req, res) {
     if (err) {
       res.status(500).send(err);
     } else{
-    res.json({ products });
-        }
-});
+      res.json({ products });
+    }
+  });
 }
 
 export function addProduct(req, res) {
@@ -32,18 +32,19 @@ export function addProduct(req, res) {
     newProduct.code = sanitizeHtml(newProduct.code);
     newProduct.name = sanitizeHtml(newProduct.name);
     newProduct.description = sanitizeHtml(newProduct.description);
-    newProduct.colors = JSON.parse(newProduct.colors);
 
-    for(let key in newProduct.colors)
-    {
-      newProduct.colors[key] = sanitizeHtml(newProduct.colors[key]);
-    }
+    let colorsObj = newProduct.colors = JSON.parse(newProduct.colors);
+    let index = 0;
+    Object.keys(colorsObj).forEach(function(key) {
+      newProduct.colors[key].name = sanitizeHtml(newProduct.colors[key].name);
+      for(let i = 0, file; file = colorsObj[key].files[i]; i++) {
+        newProduct.colors[key].files[i].filename = req.files[index].filename;
+        newProduct.photos.push({ fileName: req.files[index].filename});
+        index++;
+      }
+    });
 
     newProduct.cuid = cuid();
-
-    for(let i = 0, file; file = req.files[i]; i++) {
-        newProduct.photos.push({ fileName: file.filename})
-    }
 
     newProduct.save().then((saved) => {
       res.json({ product: saved })
