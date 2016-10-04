@@ -21,40 +21,53 @@ export class ProductDetailPage extends Component {
   };
 
   onColorChanged = (e) => {
+    console.log(e.target);
     this.setState({selectedColor: e.target.value});
   };
 
   render() {
-    let filesContainer = [];
-    let colorsContainer = [];
-    for(let key in this.props.product.colors[this.state.selectedColor].files) {
-      filesContainer.push(<div key={"color_photo_" + key} className={styles.picture}><img src={`/uploads/products/art_${this.props.product.code}/${this.props.product.colors[this.state.selectedColor].files[key].filename}`}/></div>);
-    }
-    Object.keys(this.props.product.colors).forEach((key) => {
-      colorsContainer.push(<div key={key}>
-        <button onClick={this.onColorChanged} value={key}>{this.props.product.colors[key].name}</button>
-      </div>);
-    });
     return (
       <div className={styles.container}>
         <Helmet title={this.props.product.name}/>
         <div className={styles['filter-panel']}></div>
         <div className={styles['product']}>
-          <div className={styles.photos}>{filesContainer}</div>
+          <PhotoControl colors={this.props.product.colors} productCode={this.props.product.code} selectedColor={this.state.selectedColor} />
           <div className={styles.info}>
             <div className={styles.name}>{this.props.product.name}</div>
             <div className={styles.code}>{this.props.product.code}</div>
             <div className={styles.price}>{this.props.product.price + ' грн'}</div>
             <div className={styles.price}>{this.salesPrice() + ' грн'}</div>
             <div className={styles.description}>{this.props.product.description}</div>
-            <div className={styles.description}>
-              { colorsContainer }
-            </div>
+            <ColorButtonsControl colors={this.props.product.colors} onColorChanged={this.onColorChanged} />
           </div>
         </div>
       </div>
     );
   }
+}
+
+function PhotoControl(props) {
+  let filesContainer = [];
+  for(let key in props.colors[props.selectedColor].files) {
+    filesContainer.push(<div key={"color_photo_" + key} className={styles.picture}><img src={`/uploads/products/art_${props.productCode}/${props.colors[props.selectedColor].files[key].filename}`}/></div>);
+  }
+  return (
+    <div className={styles.photos}>{filesContainer}</div>
+  );
+}
+
+function ColorButtonsControl(props) {
+  let colorsContainer = [];
+  Object.keys(props.colors).forEach((key) => {
+    colorsContainer.push(<div key={key}>
+      <button onClick={props.onColorChanged} value={key}>{props.colors[key].name}</button>
+    </div>);
+  });
+  return (
+    <div className={styles.description}>
+      { colorsContainer }
+    </div>
+  );
 }
 
 // Retrieve data from store as props
