@@ -8,6 +8,7 @@ export const ADD_PRODUCT = 'ADD_PRODUCT';
 export const ADD_PRODUCTS = 'ADD_PRODUCTS';
 export const SET_SEARCH_QUERY = 'SET_SEARCH_QUERY';
 export const FILTER_BY_GROUP = 'FILTER_BY_GROUP';
+export const FILTER_BY_CATEGORY = 'FILTER_BY_CATEGORY';
 
 export function addProduct(product) {
   return {
@@ -34,6 +35,13 @@ export function filterByGroup(groupsFilter) {
   return {
     type: FILTER_BY_GROUP,
     groupsFilter,
+  };
+}
+
+export function filterByCategory(category) {
+  return {
+    type: FILTER_BY_CATEGORY,
+    category,
   };
 }
 

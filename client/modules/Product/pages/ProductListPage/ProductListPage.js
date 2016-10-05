@@ -10,14 +10,17 @@ import styles from './ProductListPage.css';
 
 // Import Selectors
 import { getProducts } from '../../ProductReducer';
-import { setSearchQuery, filterByGroup } from '../../ProductActions';
+import { getCategories } from '../../../Category/CategoryReducer';
+import { setSearchQuery, filterByGroup, filterByCategory } from '../../ProductActions';
+
+import CategoriesBar from '../../../../components/CategoriesBar/CategoriesBar';
 
 const groups = ['male', 'female', 'child', 'other'];
 
 class ProductListPage extends Component {
   constructor(props) {
     super(props);
-    this.state = { searchQuery: '', groupsFilter: [] }
+    this.state = { searchQuery: '', groupsFilter: [], category: '' }
   }
 
   onClick = (e) => {
@@ -31,6 +34,11 @@ class ProductListPage extends Component {
     this.setState({groupsFilter : groupArray});
     this.props.dispatch(filterByGroup(groupArray));
   };
+
+  onCategorySelect = (cuid, e) => {
+    this.setState({"category": cuid });
+    this.props.dispatch(filterByCategory(cuid));
+};
 
   componentDidMount() {
     this.setState({ products: this.props.products });
@@ -50,6 +58,7 @@ class ProductListPage extends Component {
               </div>;
             })}
           </div>
+          <CategoriesBar {...this.props} onSelect={this.onCategorySelect}/>
           <input
             type="search"
             value={this.props.searchQuery}
@@ -72,11 +81,12 @@ class ProductListPage extends Component {
 }
 
 // Retrieve data from store as props
-function mapStateToProps(state) {
+function mapStateToProps(state, props) {
   return {
     searchQuery: state.products.searchQuery,
     groupsFilter: state.products.groupsFilter,
-    products: getProducts(state, state.products.searchQuery, state.products.groupsFilter),
+    products: getProducts(state, state.products.searchQuery, state.products.groupsFilter, state.products.category),
+    categories: getCategories(state, state.products.groupsFilter)
   };
 }
 

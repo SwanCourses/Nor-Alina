@@ -7,6 +7,7 @@ import Select from 'react-select';
 import { injectIntl, intlShape, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 
+import { getAllCategories } from '../../../Category/CategoryReducer';
 import { addProductRequest } from '../../ProductActions';
 
 import styles from './ProductFormPage.css';
@@ -38,6 +39,10 @@ class ProductFormPage extends Component {
     this.setState({ [e.target.name]: e.target.value });
   };
 
+  onCategoryChange = (obj) => {
+    this.setState({ "category": obj.value });
+  };
+
   onSizeChange = (val) => {
     let sizeArr = [];
     for(let i=0; i< val.length; i++) {
@@ -53,7 +58,6 @@ class ProductFormPage extends Component {
     }
     this.setState({ groups: groupArr });
   };
-
 
   onAddColor = () => {
     let obj = this.state.colors;
@@ -87,6 +91,7 @@ class ProductFormPage extends Component {
   addProduct = () => {
     let form = new FormData();
     form.append('product[name]', this.state.name);
+    form.append('product[category]', this.state.category);
     form.append('product[code]', this.state.code);
     form.append('product[price]', this.state.price);
     form.append('product[description]', this.state.description);
@@ -119,6 +124,13 @@ class ProductFormPage extends Component {
           <h2 className={styles['form-title']}>
             <FormattedMessage id="createNewProduct"/>
           </h2>
+          <Select
+            placeholder="Product category"
+            multi={false}
+            name="category"
+            value={this.state.category}
+            options={this.props.categories}
+            onChange={this.onCategoryChange} />
           <input
             placeholder={this.props.intl.messages.productName}
             value={this.state.name}
@@ -189,8 +201,8 @@ ProductFormPage.propTypes = {
   intl: intlShape.isRequired,
 };
 
-function mapStateToProps(store, props) {
-  return {};
+function mapStateToProps(store) {
+  return { categories: getAllCategories(store)};
 }
 
 export default connect(mapStateToProps)(injectIntl(ProductFormPage));
