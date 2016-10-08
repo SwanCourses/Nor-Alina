@@ -32,7 +32,8 @@ class ProductFormPage extends Component {
 
   constructor(props){
     super(props);
-    this.state = { colors: {'color_1': {name: 'red', files: []}, 'color_2': {name: '#ffffff', files: []}}};
+    this.state = { colors: {'color_1': {name: 'red', files: []}, 'color_2': {name: '#ffffff', files: []}},
+                   categories: this.props.categories.map(category => {return {value: category.cuid, label: category.name}})};
   }
 
   onChange = (e) => {
@@ -129,7 +130,7 @@ class ProductFormPage extends Component {
             multi={false}
             name="category"
             value={this.state.category}
-            options={this.props.categories}
+            options={this.state.categories}
             onChange={this.onCategoryChange} />
           <input
             placeholder={this.props.intl.messages.productName}

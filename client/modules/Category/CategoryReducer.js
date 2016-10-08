@@ -38,24 +38,19 @@ export const contains = (array1, array2) => {
 
 // Get categories
 export const getAllCategories = state =>  {
-  let categories = [];
-  for(let category of state.categories.data){
-    categories.push({value: category.cuid, label: category.name});
-  }
-  return categories;
+  return state.categories.data;
 };
 
 // Get all categories
 export const getCategories = (state, groupsFilter=[]) => {
-  let products = state.products.data.filter(prod => prod.category != null && (groupsFilter.length > 0 ? contains(groupsFilter, prod.groups) : true));
-    return state.categories.data.filter(category => {
-      for (let product of products) {
-        console.log(product.name);
-        if (product.category === category.cuid) {
-          return true;
-        }
-      }
-    })
+  let productCategories = [];
+  if(groupsFilter.length > 0){
+    productCategories = state.products.data.filter(prod => contains(groupsFilter, prod.groups)).map(product => product.category);
+  }
+  else {
+    productCategories = state.products.data.map(product => product.category);
+  }
+    return state.categories.data.filter(category => productCategories.indexOf(category.cuid) !== -1);
 };
 
 // Get category by cuid
