@@ -1,7 +1,7 @@
 /**
  * Created by alina on 25.09.16.
  */
-import {ADD_PRODUCT, ADD_PRODUCTS, SET_SEARCH_QUERY, FILTER_BY_GROUP} from './ProductActions';
+import {ADD_PRODUCT, ADD_PRODUCTS, SET_SEARCH_QUERY, FILTER_BY_GROUP, FILTER_BY_CATEGORY} from './ProductActions';
 
 const initialState = { data: [], searchQuery: '', groupsFilter: [] };
 
@@ -26,10 +26,16 @@ const ProductReducer = ( state = initialState, action) => {
               searchQuery: action.searchQuery
           };
     case FILTER_BY_GROUP:
-      return {
-        ...state,
-        groupsFilter: action.groupsFilter
-      };
+            return {
+              ...state,
+              groupsFilter: action.groupsFilter,
+              category: ''
+            };
+    case FILTER_BY_CATEGORY:
+            return{
+              ...state,
+              category: action.category
+            };
 
     default:
       return state;
@@ -46,7 +52,8 @@ export const contains = (array1, array2) => {
   }
 };
 
-export const getProducts = (state, name = '', groupsFilter = []) => {
+export const getProducts = (state, name = '', groupsFilter = [], category = '') => {
+  console.log("category");
   name = name.trim();
   let obj = state.products.data;
   if(name !== ''){
@@ -54,6 +61,10 @@ export const getProducts = (state, name = '', groupsFilter = []) => {
   }
   if(groupsFilter.length > 0){
     obj = obj.filter(product => contains(groupsFilter, product.groups));
+  }
+  if(category !== ''){
+    console.log("category1");
+    obj = obj.filter(product => product.category === category);
   }
       return obj;
   };

@@ -26,7 +26,6 @@ Product.need = [() => {
   }];
 
   Product.propTypes = {
-    children: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
   };
 
