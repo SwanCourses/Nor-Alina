@@ -8,7 +8,8 @@ import { injectIntl, intlShape, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 
 import { getAllCategories } from '../../../Category/CategoryReducer';
-import { addProductRequest } from '../../ProductActions';
+import { addProductRequest, updateProductRequest } from '../../ProductActions';
+import { getProduct } from '../../ProductReducer';
 
 import styles from './ProductFormPage.css';
 //import 'react-select/dist/react-select.css';
@@ -32,12 +33,17 @@ class ProductFormPage extends Component {
 
   constructor(props){
     super(props);
-    this.state = { colors: {'color_1': {name: 'red', files: []}, 'color_2': {name: '#ffffff', files: []}},
-                   categories: this.props.categories.map(category => {return {value: category.cuid, label: category.name}})};
+    this.state = props.product || { colors: {'color_1': {name: 'red', files: []}, 'color_2': {name: '#ffffff', files: []}}, photos: [], active: false};
+    this.state.categories = this.props.categories.map(category => {return {value: category.cuid, label: category.name}});
+    console.log(this.state.categories[0]);
   }
 
   onChange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
+  };
+
+  onCheckBoxChange = () => {
+    this.setState({ "active": !this.state.active });
   };
 
   onCategoryChange = (obj) => {
@@ -89,8 +95,13 @@ class ProductFormPage extends Component {
     this.setState({colors: obj});
   };
 
+  isEdit = ()=> {
+    return !!this.props.product
+  };
+
   addProduct = () => {
     let form = new FormData();
+    form.append('product[active]', this.state.active);
     form.append('product[name]', this.state.name);
     form.append('product[category]', this.state.category);
     form.append('product[code]', this.state.code);
@@ -114,7 +125,7 @@ class ProductFormPage extends Component {
       }
     });
 
-    this.props.dispatch(addProductRequest(form))
+    this.props.dispatch(!this.props.product ? addProductRequest(form) : updateProductRequest(this.props.product.cuid, form))
   };
 
   render(){
@@ -129,6 +140,7 @@ class ProductFormPage extends Component {
             placeholder="Product category"
             multi={false}
             name="category"
+            disabled={this.isEdit()}
             value={this.state.category}
             options={this.state.categories}
             onChange={this.onCategoryChange} />
@@ -141,6 +153,7 @@ class ProductFormPage extends Component {
           <input
             placeholder={this.props.intl.messages.productCode}
             value={this.state.code}
+            disabled={this.isEdit()}
             onChange={this.onChange}
             className={styles['form-field']}
             name="code"/>
@@ -172,8 +185,27 @@ class ProductFormPage extends Component {
             value={this.state.groups}
             options={groups}
             onChange={this.onGroupChange} />
+          <div className={styles['form-checkbox']}>
+            <p>Active</p>
+           <input
+            className={styles['form-field']}
+            name="active"
+            defaultChecked={this.state.active}
+            checked={this.state.active}
+            type="checkbox"
+            onChange={this.onCheckBoxChange}/>
+            </div>
           <ProductColorControl colors={this.state.colors} onColorFilesChange={this.onColorFilesChange} onColorChange={this.onColorChange} onRemoveColor={this.onRemoveColor} onAddColor={this.onAddColor} />
           <a className={styles['post-submit-button']} href="#" onClick={this.addProduct}><FormattedMessage id="submit"/></a>
+          <div className={styles.photos}>
+            {
+              this.state.photos.map(photo =>(
+                <div key={photo.fileName} className={styles.picture}>
+                  <img src={`/uploads/products/art_${this.props.product.code}/${photo.fileName}`}/>
+                </div>
+              ))
+            }
+          </div>
         </div>
       </div>
     )
@@ -202,8 +234,10 @@ ProductFormPage.propTypes = {
   intl: intlShape.isRequired,
 };
 
-function mapStateToProps(store) {
-  return { categories: getAllCategories(store)};
+function mapStateToProps(store, props = null) {
+  return { categories: getAllCategories(store),
+           product: getProduct(store, props === null ? -1 : props.params.cuid),
+  };
 }
 
 export default connect(mapStateToProps)(injectIntl(ProductFormPage));
