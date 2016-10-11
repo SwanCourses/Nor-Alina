@@ -34,8 +34,14 @@ class ProductFormPage extends Component {
   constructor(props){
     super(props);
     this.state = props.product || { colors: {'color_1': {name: 'red', files: []}, 'color_2': {name: '#ffffff', files: []}}, photos: [], active: false};
-    this.state.categories = this.props.categories.map(category => {return {value: category.cuid, label: category.name}});
-    console.log(this.state.categories[0]);
+  }
+
+  componentDidMount(){
+    this.setState({categories: this.props.categories.map(category => ({value: category.cuid, label: category.name}))});
+  }
+
+  componentWillReceiveProps(){
+    this.setState({categories: this.props.categories.map(category => ({value: category.cuid, label: category.name}))});
   }
 
   onChange = (e) => {
