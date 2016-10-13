@@ -5,6 +5,7 @@ import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
 import { FormattedMessage } from 'react-intl';
+import { Link } from 'react-router';
 import styles from './ProductDetailPage.css';
 
 // Import Selectors
@@ -39,6 +40,7 @@ export class ProductDetailPage extends Component {
             <div className={styles.price}>{this.salesPrice() + ' грн'}</div>
             <div className={styles.description}>{this.props.product.description}</div>
             <ColorButtonsControl colors={this.props.product.colors} onColorChanged={this.onColorChanged} />
+            <Link to={`/products/${this.props.product.cuid}/edit`}><FormattedMessage id="edit"/></Link>
           </div>
         </div>
       </div>

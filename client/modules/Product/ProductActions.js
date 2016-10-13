@@ -9,6 +9,7 @@ export const ADD_PRODUCTS = 'ADD_PRODUCTS';
 export const SET_SEARCH_QUERY = 'SET_SEARCH_QUERY';
 export const FILTER_BY_GROUP = 'FILTER_BY_GROUP';
 export const FILTER_BY_CATEGORY = 'FILTER_BY_CATEGORY';
+export const REPLACE_PRODUCT = 'REPLACE_PRODUCT';
 
 export function addProduct(product) {
   return {
@@ -23,6 +24,13 @@ export function addProducts(products) {
     products,
   };
 }
+
+export function replaceProduct(product) {
+    return {
+        type: REPLACE_PRODUCT,
+        product,
+      };
+  }
 
 export function setSearchQuery(searchQuery) {
   return {
@@ -53,6 +61,15 @@ export function addProductRequest(form) {
     });
   }
 }
+
+export function updateProductRequest(cuid, form) {
+    return (dispatch) => {
+        return callApiForm('products/' + cuid, 'put', form).then(res => {
+            dispatch(replaceProduct(res.product));
+            browserHistory.push('/products/'+res.product.cuid)
+          });
+      };
+  }
 
 export function fetchProducts() {
   return (dispatch) => {

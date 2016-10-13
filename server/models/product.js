@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const productSchema = new Schema({
+  active: {type: 'Boolean', required:true},
   name: {type: 'String', required: true},
   category: {type: 'String', required: true},
   code: {type: 'String', required: true},

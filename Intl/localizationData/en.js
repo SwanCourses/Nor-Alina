@@ -20,6 +20,7 @@ export default {
     productColor: 'Color name or Hex code',
     categoryName: 'Category name',
     createNewCategory: 'Create new category',
+    edit: 'Редактировать',
     submit: 'Submit',
     comment: `user {name} {value, plural,
     	  =0 {does not have any comments}

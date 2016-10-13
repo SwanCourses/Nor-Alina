@@ -1,7 +1,7 @@
 /**
  * Created by alina on 25.09.16.
  */
-import {ADD_PRODUCT, ADD_PRODUCTS, SET_SEARCH_QUERY, FILTER_BY_GROUP, FILTER_BY_CATEGORY} from './ProductActions';
+import {ADD_PRODUCT, ADD_PRODUCTS, SET_SEARCH_QUERY, FILTER_BY_GROUP, FILTER_BY_CATEGORY, REPLACE_PRODUCT} from './ProductActions';
 
 const initialState = { data: [], searchQuery: '', groupsFilter: [] };
 
@@ -19,7 +19,11 @@ const ProductReducer = ( state = initialState, action) => {
               ...state,
               data: action.products,
             };
-
+    case REPLACE_PRODUCT:
+            return {
+              ...state,
+              data: state.data.map(obj => action.product.cuid === obj.cuid ? action.product : obj)
+          };
     case SET_SEARCH_QUERY:
             return {
               ...state,
@@ -53,9 +57,8 @@ export const contains = (array1, array2) => {
 };
 
 export const getProducts = (state, name = '', groupsFilter = [], category = '') => {
-  console.log("category");
   name = name.trim();
-  let obj = state.products.data;
+  let obj = state.products.data.filter(x=>x.active);
   if(name !== ''){
     obj = obj.filter(product =>  (`${product.name} ${product.price}`.indexOf(name) > -1));
   }
@@ -63,7 +66,6 @@ export const getProducts = (state, name = '', groupsFilter = [], category = '') 
     obj = obj.filter(product => contains(groupsFilter, product.groups));
   }
   if(category !== ''){
-    console.log("category1");
     obj = obj.filter(product => product.category === category);
   }
       return obj;

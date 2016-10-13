@@ -19,6 +19,7 @@ export default {
     productSize: 'Size',
     productColor: 'Color name or Hex code',
     categoryName: 'Nom de catégorie',
+    edit: 'Редагувати',
     createNewCategory: 'Créer nouvelle catégorie',
     submit: 'Soumettre',
     comment: `user {name} {value, plural,
