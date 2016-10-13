@@ -29,19 +29,22 @@ const groups = [
   { value: 'other', label: 'other' }
 ];
 
-class ProductFormPage extends Component {
+let SetInitialData = (component) => {
+  component.setState({categories: component.props.categories.map(category => ({value: category.cuid, label: category.name}))});
+};
 
+class ProductFormPage extends Component {
   constructor(props){
     super(props);
     this.state = props.product || { colors: {'color_1': {name: 'red', files: []}, 'color_2': {name: '#ffffff', files: []}}, photos: [], active: false};
   }
 
   componentDidMount(){
-    this.setState({categories: this.props.categories.map(category => ({value: category.cuid, label: category.name}))});
+    SetInitialData(this);
   }
 
   componentWillReceiveProps(){
-    this.setState({categories: this.props.categories.map(category => ({value: category.cuid, label: category.name}))});
+    SetInitialData(this);
   }
 
   onChange = (e) => {
@@ -240,7 +243,7 @@ ProductFormPage.propTypes = {
   intl: intlShape.isRequired,
 };
 
-function mapStateToProps(store, props = null) {
+function mapStateToProps(store, props) {
   return { categories: getAllCategories(store),
            product: getProduct(store, props === null ? -1 : props.params.cuid),
   };
