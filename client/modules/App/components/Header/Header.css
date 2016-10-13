@@ -6,7 +6,7 @@
 
 .content {
   width: 100%;
-  max-width: 1140px;
+  max-width: 980px;
   margin: auto;
   padding: 64px 16px;
   overflow: auto;
@@ -35,26 +35,24 @@
 
 .language-switcher {
   background: rgba(0, 0, 0, 0.1);
-
 }
 
-.language-switcher-container {
-  max-width: 1140px;
+.language-switcher ul {
+  list-style: none;
+  width: 980px;
   margin: auto;
-  display:flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: flex-end;
+  text-align: right;
 }
 
-.language-switcher-container div {
+.language-switcher li {
+  display: inline-block;
   margin: 10px;
   padding: 5px;
   cursor: pointer;
   color: #fff;
 }
 
-.language-switcher-container:first-child {
+.language-switcher li:first-child {
   color: rgba(255, 255, 255, 0.7);
 }
 

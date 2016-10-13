@@ -5,25 +5,58 @@ import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
 import { FormattedMessage } from 'react-intl';
+import { addToCart } from '../../../Cart/CartActions'
 import { Link } from 'react-router';
 import styles from './ProductDetailPage.css';
+import Select from 'react-select';
 
 // Import Selectors
 import { getProduct } from '../../ProductReducer';
+import CartAmount from '../../../../components/CartAmount/CartAmount';
+
+const sizes = [
+  { value: 'XS', label: 'XS' },
+  { value: 'S', label: 'S' },
+  { value: 'M', label: 'M' },
+  { value: 'L', label: 'L' },
+  { value: 'XL', label: 'XL' }
+];
 
 export class ProductDetailPage extends Component {
   constructor(props) {
     super(props);
-    this.state = { selectedColor: Object.keys(this.props.product.colors)[0] }
+    this.state = { selectedColor: Object.keys(this.props.product.colors)[0], amount : 1 }
   }
 
   salesPrice = ()=>{
     return this.props.product.price * 0.95
   };
 
+  onSizeChange = (e) => {
+    this.setState({ size: e.value });
+    console.log(e.value);
+  };
+
   onColorChanged = (e) => {
-    console.log(e.target);
     this.setState({selectedColor: e.target.value});
+  };
+
+  onAmountMinus = () => {
+    this.setState({amount : +this.state.amount -1});
+  };
+
+  onAmountPlus = () => {
+    this.setState({amount : +this.state.amount +1});
+    console.log(this.state.amount);
+  };
+
+  onAmountChange = (e) => {
+    this.setState({amount : e.target.value});
+    console.log(e.target.value);
+  };
+
+  addProductToCart = () => {
+    this.props.dispatch(addToCart(this.props.product.cuid, this.state.selectedColor, this.state.size, this.state.amount))
   };
 
   render() {
@@ -32,6 +65,7 @@ export class ProductDetailPage extends Component {
         <Helmet title={this.props.product.name}/>
         <div className={styles['filter-panel']}></div>
         <div className={styles['product']}>
+          <Link to={`/products/${this.props.product.cuid}/edit`}><FormattedMessage id="edit"/></Link>
           <PhotoControl colors={this.props.product.colors} productCode={this.props.product.code} selectedColor={this.state.selectedColor} />
           <div className={styles.info}>
             <div className={styles.name}>{this.props.product.name}</div>
@@ -40,7 +74,16 @@ export class ProductDetailPage extends Component {
             <div className={styles.price}>{this.salesPrice() + ' грн'}</div>
             <div className={styles.description}>{this.props.product.description}</div>
             <ColorButtonsControl colors={this.props.product.colors} onColorChanged={this.onColorChanged} />
-            <Link to={`/products/${this.props.product.cuid}/edit`}><FormattedMessage id="edit"/></Link>
+            <Select
+              placeholder="Select size"
+              name="size"
+              value={this.state.size}
+              options={sizes}
+              onChange={this.onSizeChange} />
+            <div onClick={this.addProductToCart}>
+                    <FormattedMessage id="order"/>
+               </div>
+            <CartAmount amount={this.state.amount} onAmountMinusClick={this.onAmountMinus} onAmountNumberChange={this.onAmountChange} onAmountPlusClick={this.onAmountPlus} />
           </div>
         </div>
       </div>
