@@ -9,6 +9,7 @@ import { addToCart } from '../../../Cart/CartActions'
 import { Link } from 'react-router';
 import styles from './ProductDetailPage.css';
 import Select from 'react-select';
+import { isAdmin } from '../../../../util/apiCaller';
 
 // Import Selectors
 import { getProduct } from '../../ProductReducer';
@@ -65,7 +66,7 @@ export class ProductDetailPage extends Component {
         <Helmet title={this.props.product.name}/>
         <div className={styles['filter-panel']}></div>
         <div className={styles['product']}>
-          <Link to={`/products/${this.props.product.cuid}/edit`}><FormattedMessage id="edit"/></Link>
+          {isAdmin() && <Link to={`/products/${this.props.product.cuid}/edit`}><FormattedMessage id="edit"/></Link>}
           <PhotoControl colors={this.props.product.colors} productCode={this.props.product.code} selectedColor={this.state.selectedColor} />
           <div className={styles.info}>
             <div className={styles.name}>{this.props.product.name}</div>

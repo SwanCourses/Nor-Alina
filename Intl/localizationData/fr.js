@@ -11,6 +11,14 @@ export default {
     authorName: 'Nom de l\'auteur',
     postTitle: 'Titre de l\'article',
     postContent: 'Contenu après',
+    loginForm: 'Authorization',
+    registrationForm: 'Registration',
+    signIn: 'Sign In',
+    profile: 'Profile',
+    userLogin: 'Email',
+    update: 'Update',
+    userName: 'Full Name',
+    userPassword: 'Password',
     createNewProduct: 'Ajouter un nouveau produit',
     productName: 'Prénom',
     productCode: 'Article',
@@ -33,7 +41,7 @@ export default {
     	  =0 {does not have <i style='font-style: italic'>any</i> comments}
     	  =1 {has <i style='font-style: italic'>#</i> comment}
     	  other {has <i style='font-style: italic'>#</i> comments}
-    	} (in real app this would be translated to French)`,
+    	}`,
     nestedDateComment: `user {name} {value, plural,
   		  =0 {does not have any comments}
   		  =1 {has # comment}
