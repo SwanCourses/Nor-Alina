@@ -40,8 +40,7 @@ export function updateUserProfile(req, res) {
   if (!req.body) {
     res.status(403).end();
   } else {
-    let userCuid = jwt.decode(req.headers.authorization.replace('JWT ', ''), serverConfig.JWT_TOKEN).sub;
-    User.findOne({cuid: userCuid})
+    User.findOne({cuid: req.user.cuid})
       .then(user => {
         user.name = req.body.name;
         return user.save();
@@ -57,8 +56,7 @@ export function updateUserProfile(req, res) {
 
 
 export function getUserProfile(req, res) {
-  let userCuid = jwt.decode(req.headers.authorization.replace('JWT ', ''), serverConfig.JWT_TOKEN).sub;
-  User.findOne({cuid: userCuid})
+  User.findOne({cuid: req.user.cuid})
     .then(user => {
       res.json({email: user.email, name: user.name});
     })
